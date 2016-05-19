@@ -7,9 +7,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -44,11 +41,7 @@ public class ShopListFragment extends BaseFragment{
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+
 
     @Nullable
     @Override
@@ -73,26 +66,12 @@ public class ShopListFragment extends BaseFragment{
         if (getArguments() != null)
             mData = (ArrayList<Pair<Product, Integer>>) getArguments().getSerializable("Data");
 
-        balance.setText(String.valueOf(getBalance()));
+        balance.setText(String.valueOf(getBalance()) + " \u20BD");
 
         recyclerView.setAdapter(new ProductListAdapter());
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_list_products, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_done_all:
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     private void initializeRecyclerView() {
         recyclerView.setHasFixedSize(true);

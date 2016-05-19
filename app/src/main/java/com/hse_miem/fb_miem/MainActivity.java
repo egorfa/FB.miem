@@ -75,6 +75,25 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void callDrawerItem(int position) {
+        int id = -1;
+        switch (position) {
+            case 0:
+                id = R.id.item_header_1;
+                break;
+            case 1:
+                id = R.id.item_header_2;
+                break;
+            case 2:
+                id = R.id.item_header_3;
+                break;
+            case 3:
+                id = R.id.item_header_4;
+                break;
+        }
+        navigationView.getMenu().performIdentifierAction(id, 0);
+    }
+
     private void setSelectedItem(int position) {
         Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -128,6 +147,6 @@ public class MainActivity extends AppCompatActivity {
     public void goToMap(ArrayList<Pair<Product, Integer>> mProductsChoosen) {
         if (mProductsChoosen!= null && mProductsChoosen.size() > 0)
             mData = mProductsChoosen;
-        setSelectedItem(0);
+        callDrawerItem(0);
     }
 }

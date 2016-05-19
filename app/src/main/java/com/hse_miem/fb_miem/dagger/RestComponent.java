@@ -1,6 +1,7 @@
 package com.hse_miem.fb_miem.dagger;
 
 import com.hse_miem.fb_miem.AllProductsActivity;
+import com.hse_miem.fb_miem.fragments.ShopCartMapTabs.ShopMapFragment;
 import com.hse_miem.fb_miem.fragments.TestFragment;
 import com.hse_miem.fb_miem.server.RestModule;
 
@@ -16,4 +17,5 @@ import dagger.Component;
 public interface RestComponent {
     void inject(TestFragment testFragment);
     void inject(AllProductsActivity allProductsActivity);
+    void inject(ShopMapFragment shopMapFragment);
 }

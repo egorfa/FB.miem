@@ -10,11 +10,15 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hse_miem.fb_miem.R;
 import com.hse_miem.fb_miem.fragments.ShopCartMapTabs.ShopListFragment;
+import com.hse_miem.fb_miem.fragments.ShopCartMapTabs.ShopMapFragment;
 import com.hse_miem.fb_miem.model.Product;
 
 import java.util.ArrayList;
@@ -42,6 +46,12 @@ public class ShopCartMapTabFragment extends BaseFragment {
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -76,6 +86,22 @@ public class ShopCartMapTabFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list_products, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_done_all:
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private class ShopCartMapTabAdapter extends FragmentPagerAdapter{
         private Fragment _currentPrimaryItem;
         private Fragment _lastCurentPrimaryItem;
@@ -93,7 +119,7 @@ public class ShopCartMapTabFragment extends BaseFragment {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return new TestFragment();
+                    return new ShopMapFragment();
                 case 1:
                     return ShopListFragment.newInstance(mData);
 

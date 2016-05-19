@@ -78,7 +78,7 @@ public class AllProductsActivity extends AppCompatActivity implements View.OnCli
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(this.getClass().toString(), e.getMessage());
+                        Log.e(this.getClass().getName(), e.getMessage());
                         e.printStackTrace();
                     }
 
