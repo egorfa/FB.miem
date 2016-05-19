@@ -1,5 +1,8 @@
 package com.hse_miem.fb_miem.fragments.ShopCartMapTabs;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -43,6 +46,8 @@ public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
 
     private Subscription subscriptionPin;
 
+    private BluetoothAdapter mBluetoothAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +62,8 @@ public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+        final BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     @Override
@@ -87,6 +93,7 @@ public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
                     public void onNext(ArrayList<Pin> pins) {
                         mPins = pins;
                         setPinOnMap();
+                        scanLeDevice(true);
                     }
                 });
     }
@@ -112,11 +119,15 @@ public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
     }
 
     private void scanLeDevice(final boolean enable) {
+        Log.d("LeScan", "scan started");
         final LeScanCallback callback = new LeScanCallback() {
             @Override
             public void onDeviceFound(Beacon device) {
-
+                Log.d("LeScan", "major = " + device.getMajor());
+                Log.d("LeScan", "minor = " + device.getMinor());
             }
         };
+
+        mBluetoothAdapter.startLeScan(callback);
     }
 }

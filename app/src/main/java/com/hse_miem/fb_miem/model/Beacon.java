@@ -18,6 +18,7 @@ public class Beacon {
 
     @Getter @Setter
     private Integer major;
+    @Getter @Setter
     private Integer minor;
 
     @Getter @Setter
@@ -26,6 +27,7 @@ public class Beacon {
     private String UUID;
     @Getter @Setter
     private int TxPower;
+    @Getter @Setter
     private int Rssi;
 
     public Beacon(BluetoothDevice BLdevice, String name, String UUID, Integer major, Integer minor, int txPower, int rssi) {
