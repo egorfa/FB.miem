@@ -6,21 +6,26 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.hse_miem.fb_miem.fragments.ProductFragment;
-import com.hse_miem.fb_miem.fragments.TestFragment;
+import com.hse_miem.fb_miem.fragments.ShopCartMapTabFragment;
+import com.hse_miem.fb_miem.model.Product;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     public static int ALL_PRODUCTS_CODE = 1001;
+
+    private ArrayList<Pair<Product, Integer>> mData;
 
     @Bind(R.id.drawer_layout)       DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_view)     NavigationView navigationView;
@@ -36,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupToolBar();
         setupNavigationDrawerContent(navigationView);
-        setSelectedItem(0);
+        navigationView.getMenu().performIdentifierAction(R.id.item_header_2, 0);
     }
 
     private void setupToolBar() {
@@ -72,13 +77,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSelectedItem(int position) {
         Fragment fragment = null;
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position){
             case 0:
-                fragment = new TestFragment();
+                if (mData != null && !mData.isEmpty())
+                    fragment = ShopCartMapTabFragment.newInstance(mData);
+                else fragment = new ShopCartMapTabFragment();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+//                fragment = new TestFragment();
                 break;
             case 1:
                 fragment = new ProductFragment();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 //                fragment = new CreatePurchaseFragment();
                 break;
             case 2:
@@ -86,15 +96,9 @@ public class MainActivity extends AppCompatActivity {
             case 3:
                 break;
         }
+        currentFragment = fragment;
 
-        if (fragment != null) {
-            currentFragment = fragment;
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            Log.e(this.getClass().getName(), "Error. Fragment is not created");
-        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
 
@@ -113,13 +117,17 @@ public class MainActivity extends AppCompatActivity {
         switch(resultCode) {
             case RESULT_OK:
                 if (requestCode == ALL_PRODUCTS_CODE) {
-                    ProductFragment productFragment = (ProductFragment) currentFragment;
-                    productFragment.updateArray(data.getExtras().getParcelable("Product"));
+                    if (currentFragment instanceof ProductFragment)
+                        ((ProductFragment)currentFragment).updateArray(data.getExtras().getParcelable("Product"));
                 }
         }
 
     }
 
 
-
+    public void goToMap(ArrayList<Pair<Product, Integer>> mProductsChoosen) {
+        if (mProductsChoosen!= null && mProductsChoosen.size() > 0)
+            mData = mProductsChoosen;
+        setSelectedItem(0);
+    }
 }

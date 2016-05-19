@@ -3,11 +3,21 @@
     <string name="main">Пример №1</string>
     <string name="products">Создать список</string>
     <string name="search_hint">Поиск продукта</string>
+    <string name="navigate">Проложить маршрут</string>
     <string name="microphone">Голосовой поиск</string>
     <string name="remove">Удалить</string>
+    <string name="route">Проложить маршрут</string>
+    <string name="complete">Завершить покупку</string>
     <string name="empty_message">Не добавлено ни одного товара</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tab_map">Карта магазина</string>
+    <string name="tab_cart">Список покупок</string>
+
+    <string name="header1">Покупка</string>
+    <string name="header2">Создать покупку</string>
+    <string name="header3">История</string>
+    <string name="header4">Настройки</string>
+    <string name="end">ЗАВЕРШИТЬ</string>
+    <string name="button_undo">Undo</string>
 
 </resources>

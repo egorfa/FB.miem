@@ -93,8 +93,8 @@ public class AllProductsActivity extends AppCompatActivity implements View.OnCli
     private void initializeRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         recyclerView.setLayoutManager(mLayoutManager);
 
     }
