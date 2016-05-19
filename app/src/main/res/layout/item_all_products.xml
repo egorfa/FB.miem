@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="14dp"
+    android:layout_marginLeft="14dp"
+    android:layout_marginBottom="14dp"
+    android:layout_marginRight="19dp"
+    android:background="@color/white"
+    android:weightSum="10">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/image"
+            tools:src="@drawable/logo"
+            android:layout_margin="16dp"
+            />
+
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в око Молоко хуй в ок"
+                android:textColor="@color/text_main"
+                android:textSize="16sp"
+                android:id="@+id/text_name"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="59.6 ₽"
+                android:id="@+id/text_price"
+                android:textColor="@color/text_additional"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+</LinearLayout>

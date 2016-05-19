@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">F&amp;B</string>
+    <string name="main">Пример №1</string>
+    <string name="products">Создать список</string>
+    <string name="search_hint">Поиск продукта</string>
+    <string name="microphone">Голосовой поиск</string>
+    <string name="remove">Удалить</string>
+    <string name="empty_message">Не добавлено ни одного товара</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
