@@ -93,9 +93,9 @@ public class ShopCartMapTabFragment extends BaseFragment {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return ShopListFragment.newInstance(mData);
-                case 1:
                     return new TestFragment();
+                case 1:
+                    return ShopListFragment.newInstance(mData);
 
             }
             return null;
