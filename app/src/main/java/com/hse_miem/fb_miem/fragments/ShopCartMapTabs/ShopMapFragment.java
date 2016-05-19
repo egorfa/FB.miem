@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.hse_miem.fb_miem.LeScanCallback;
 import com.hse_miem.fb_miem.OnPinClickListener;
 import com.hse_miem.fb_miem.R;
 import com.hse_miem.fb_miem.dagger.InjectorClass;
 import com.hse_miem.fb_miem.fragments.BaseFragment;
+import com.hse_miem.fb_miem.model.Beacon;
 import com.hse_miem.fb_miem.model.Pin;
 import com.hse_miem.fb_miem.model.Product;
 import com.hse_miem.fb_miem.server.fbAPI;
@@ -109,5 +111,12 @@ public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
 
     }
 
+    private void scanLeDevice(final boolean enable) {
+        final LeScanCallback callback = new LeScanCallback() {
+            @Override
+            public void onDeviceFound(Beacon device) {
 
+            }
+        };
+    }
 }
