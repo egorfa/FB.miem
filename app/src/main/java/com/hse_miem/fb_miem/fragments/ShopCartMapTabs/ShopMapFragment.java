@@ -5,7 +5,7 @@ import com.hse_miem.fb_miem.fragments.BaseFragment;
 /**
  * Created by Egor on 20/05/16.
  */
-public class ShopCartFragment extends BaseFragment {
+public class ShopMapFragment extends BaseFragment {
 
 //    @Nullable
 //    @Override
