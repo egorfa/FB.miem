@@ -1,27 +1,40 @@
 package com.hse_miem.fb_miem.fragments.ShopCartMapTabs;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.hse_miem.fb_miem.OnPinClickListener;
 import com.hse_miem.fb_miem.R;
+import com.hse_miem.fb_miem.TestData;
 import com.hse_miem.fb_miem.dagger.InjectorClass;
 import com.hse_miem.fb_miem.fragments.BaseFragment;
+import com.hse_miem.fb_miem.fragments.ShopCartMapTabFragment;
 import com.hse_miem.fb_miem.model.Pin;
 import com.hse_miem.fb_miem.model.Product;
 import com.hse_miem.fb_miem.server.fbAPI;
+import com.onlylemi.mapview.library.MapView;
+import com.onlylemi.mapview.library.MapViewListener;
+import com.onlylemi.mapview.library.layer.MarkLayer;
+import com.onlylemi.mapview.library.layer.RouteLayer;
+import com.onlylemi.mapview.library.utils.MapUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,12 +43,19 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Egor on 20/05/16.
  */
-public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
+public class ShopMapFragment extends BaseFragment implements MapViewListener {
 
+    private Bitmap bitmap;
     private ArrayList<Product> mProducts;
     private ArrayList<Pin> mPins;
+    private List<PointF> nodes;
+    private List<PointF> nodesContract;
+    private List<PointF> marks;
 
-    @Bind(R.id.map)     ImageView map;
+    @Bind(R.id.mapview)     MapView map;
+
+    private MarkLayer markLayer;
+    private RouteLayer routeLayer;
 
     @Inject fbAPI fbApi;
 
@@ -48,66 +68,130 @@ public class ShopMapFragment extends BaseFragment implements OnPinClickListener{
         View view = inflater.inflate(R.layout.fragment_shop_map, container, false);
         ButterKnife.bind(this, view);
         InjectorClass.getRestComponent().inject(this);
+
+        bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(getActivity().getAssets().open("map.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         mProducts = new ArrayList<>();
+        mPins = new ArrayList<>();
 
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+        nodes = TestData.getNodes();
+        nodesContract = TestData.getNodesContacts();
+        MapUtils.init(nodes.size(), nodesContract.size());
+        mProducts = ((ShopCartMapTabFragment)getParentFragment()).getProducts();
+        loadPins();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        loadPins();
     }
 
     private void loadPins() {
         subscriptionPin = fbApi.getAllPins()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<Pin>>() {
+                .flatMapIterable(pins -> pins)
+                .flatMap(ShopMapFragment::getItemPin)
+                .filter(pin -> {
+                    final boolean[] flag = {false};
+                    Observable.from(mProducts)
+                            .subscribe(product -> {
+                                if (product.getId() == pin.getId())
+                                    flag[0] = true;
+                            });
+                    return flag[0];
+                })
+                .subscribe(new Observer<Pin>() {
                     @Override
                     public void onCompleted() {
-
+                        setupPins();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(this.getClass().getName(), e.getMessage());
+                        Log.e(getClass().getName(), e.getMessage());
                         e.printStackTrace();
                     }
 
                     @Override
-                    public void onNext(ArrayList<Pin> pins) {
-                        mPins = pins;
-                        setPinOnMap();
+                    public void onNext(Pin pin) {
+                        mPins.add(pin);
                     }
                 });
     }
 
-    private void setPinOnMap() {
-//        map.onDraw);
-//        Bitmap map = BitmapFactory.decodeResource(getResources(), R.drawable.map);
-//        canvas.drawBitmap(map, 0, 0, null);
-//
-//        Bitmap marker = BitmapFactory.decodeResource(getResources(), R.drawable.marker);
-//        canvas.drawBitmap(marker, xPositionFor1stMarker, yPositionFor1stMarker, null);
-//        canvas.drawBitmap(marker, xPositionFor2ndMarker, yPositionFor2ndMarker, null);
+    private void setupPins() {
+        map.loadMap(bitmap);
+        map.setMapViewListener(this);
+    }
+
+
+    private static rx.Observable<Pin> getItemPin(Pin pin) {
+        Pin pin1 = pin;
+        return rx.Observable.just(pin1);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        unsubscribe(subscriptionPin);
     }
+
 
     @Override
-    public void onPinClicked(int position) {
+    public void onMapLoadSuccess() {
+
+        List<PointF> marks = new ArrayList<>();
+        List<String> marksNames = new ArrayList<>();
+                Observable.from(mPins)
+                .flatMap(pin -> Observable.just(Pair.create(pin.getPointF(), pin.getName())))
+                .subscribe(new Observer<Pair<PointF, String>>() {
+                    @Override
+                    public void onCompleted() {
+                        marks.add(new PointF(190,173));
+                        markLayer = new MarkLayer(map, marks, marksNames);
+                        routeLayer = new RouteLayer(map);
+
+                        markLayer.setMarkIsClickListener(num -> {
+                            PointF target = new PointF(marks.get(num).x, marks.get(num).y);
+                            List<Integer> routeList = MapUtils.getShortestDistanceBetweenTwoPoints(marks.get(marks.size()-1), target, nodes, nodesContract);
+                            routeLayer.setNodeList(nodes);
+                            routeLayer.setRouteList(routeList);
+                            map.refresh();
+                        });
+                        map.addLayer(markLayer);
+                        map.addLayer(routeLayer);
+                        map.refresh();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Pair<PointF, String> pointFStringPair) {
+                        marks.add(pointFStringPair.first);
+                        marksNames.add(pointFStringPair.second);
+                    }
+                });
 
     }
 
 
+    @Override
+    public void onMapLoadFail() {
+        Snackbar.make(getView().findViewById(R.id.clayout), "Не удалось загрузить карту", Snackbar.LENGTH_SHORT).show();
+    }
 }

@@ -1,4 +1,4 @@
-package com.hse_miem.fb_miem;
+package com.hse_miem.fb_miem.Decorators;
 
 import android.content.Context;
 import android.content.res.TypedArray;

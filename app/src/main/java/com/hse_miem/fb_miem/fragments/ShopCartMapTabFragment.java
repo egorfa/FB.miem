@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 
 /**
  * Created by Egor on 19/05/16.
@@ -100,6 +101,15 @@ public class ShopCartMapTabFragment extends BaseFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public ArrayList<Product> getProducts() {
+        ArrayList<Product> products = new ArrayList<>();
+        Observable.from(mData)
+                .subscribe(productIntegerPair -> {
+                    products.add(productIntegerPair.first);
+                });
+        return  products;
     }
 
     private class ShopCartMapTabAdapter extends FragmentPagerAdapter{

@@ -24,6 +24,8 @@ public class Product implements Parcelable {
     @Getter @Setter
     private String image;
 
+    public Product() {
+    }
 
     protected Product(Parcel in) {
         id = in.readInt();

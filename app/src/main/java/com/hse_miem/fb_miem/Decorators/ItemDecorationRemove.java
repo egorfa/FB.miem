@@ -1,4 +1,4 @@
-package com.hse_miem.fb_miem;
+package com.hse_miem.fb_miem.Decorators;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;

@@ -1,5 +1,9 @@
 package com.hse_miem.fb_miem.model;
 
+import android.graphics.PointF;
+
+import com.google.gson.annotations.SerializedName;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,11 +16,8 @@ public class Pin {
     private int id;
     @Getter @Setter
     private String name;
-    @Getter @Setter
-    private double x;
-    @Getter @Setter
-    private double y;
-
+    @Getter @Setter @SerializedName("point")
+    private PointF pointF;
 
 
 }

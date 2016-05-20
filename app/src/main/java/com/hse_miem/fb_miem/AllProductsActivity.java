@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hse_miem.fb_miem.Decorators.DividerItemDecoration;
 import com.hse_miem.fb_miem.dagger.InjectorClass;
 import com.hse_miem.fb_miem.model.Product;
 import com.hse_miem.fb_miem.server.fbAPI;

@@ -28,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hse_miem.fb_miem.AllProductsActivity;
-import com.hse_miem.fb_miem.ItemDecorationRemove;
+import com.hse_miem.fb_miem.Decorators.ItemDecorationRemove;
 import com.hse_miem.fb_miem.MainActivity;
 import com.hse_miem.fb_miem.R;
 import com.hse_miem.fb_miem.model.Product;
