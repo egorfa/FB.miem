@@ -1,40 +1,27 @@
 package com.hse_miem.fb_miem.fragments.ShopCartMapTabs;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.hse_miem.fb_miem.OnPinClickListener;
 import com.hse_miem.fb_miem.R;
-import com.hse_miem.fb_miem.TestData;
 import com.hse_miem.fb_miem.dagger.InjectorClass;
 import com.hse_miem.fb_miem.fragments.BaseFragment;
-import com.hse_miem.fb_miem.fragments.ShopCartMapTabFragment;
 import com.hse_miem.fb_miem.model.Pin;
 import com.hse_miem.fb_miem.model.Product;
 import com.hse_miem.fb_miem.server.fbAPI;
-import com.onlylemi.mapview.library.MapView;
-import com.onlylemi.mapview.library.MapViewListener;
-import com.onlylemi.mapview.library.layer.MarkLayer;
-import com.onlylemi.mapview.library.layer.RouteLayer;
-import com.onlylemi.mapview.library.utils.MapUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -60,6 +47,8 @@ public class ShopMapFragment extends BaseFragment implements MapViewListener {
     @Inject fbAPI fbApi;
 
     private Subscription subscriptionPin;
+
+    private BluetoothAdapter mBluetoothAdapter;
 
     @Nullable
     @Override
@@ -90,6 +79,9 @@ public class ShopMapFragment extends BaseFragment implements MapViewListener {
         MapUtils.init(nodes.size(), nodesContract.size());
         mProducts = ((ShopCartMapTabFragment)getParentFragment()).getProducts();
         loadPins();
+
+        final BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
     }
 
     @Override
@@ -127,6 +119,7 @@ public class ShopMapFragment extends BaseFragment implements MapViewListener {
                     @Override
                     public void onNext(Pin pin) {
                         mPins.add(pin);
+                        scanLeDevice(true);
                     }
                 });
     }
@@ -147,7 +140,6 @@ public class ShopMapFragment extends BaseFragment implements MapViewListener {
         super.onPause();
         unsubscribe(subscriptionPin);
     }
-
 
     @Override
     public void onMapLoadSuccess() {
@@ -193,5 +185,18 @@ public class ShopMapFragment extends BaseFragment implements MapViewListener {
     @Override
     public void onMapLoadFail() {
         Snackbar.make(getView().findViewById(R.id.clayout), "Не удалось загрузить карту", Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void scanLeDevice(final boolean enable) {
+        Log.d("LeScan", "scan started");
+        final LeScanCallback callback = new LeScanCallback() {
+            @Override
+            public void onDeviceFound(Beacon device) {
+                Log.d("LeScan", "major = " + device.getMajor());
+                Log.d("LeScan", "minor = " + device.getMinor());
+            }
+        };
+
+        mBluetoothAdapter.startLeScan(callback);
     }
 }
